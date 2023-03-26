@@ -17,8 +17,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-const List<Offset> x = [Offset(21.5,170.5),Offset(72.5,219.5)];
-
 class LoadPage extends StatefulWidget {
   const LoadPage({super.key});
 
@@ -28,14 +26,55 @@ class LoadPage extends StatefulWidget {
 
 class LoadPageState extends State<LoadPage> {
   bool darkTheme = false;
-  Offset? _tapPosition;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        backgroundColor: darkTheme ? null : Colors.grey,
+        appBar: AppBar (
+          title: const Text("阿里山蔣中正行館"),
+          backgroundColor: Colors.white60,
+          centerTitle: false,
+        ),
+        body: Container (
+            color: Colors.black26,
+            child: DraggableImage(imageUrl: "assets/map.png")
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: () {
+          },
+          backgroundColor: Colors.blueGrey,
+          label: const Text("查看介紹"),
+          icon: const Icon(Icons.remove_red_eye_outlined),
+        )
+    );
+  }
+}
+//==============================================================================
+class DraggableImage extends StatefulWidget {
+  final String imageUrl;
+  final double maxScale;
+
+  const DraggableImage({super.key,
+    required this.imageUrl,
+    this.maxScale = 2.0
+  });
+
+  @override
+  State<DraggableImage> createState() => _DraggableImageState();
+}
+
+class _DraggableImageState extends State<DraggableImage> {
+  Offset _tapPosition = const Offset(0, 0);
+
   String _room = "none";
+
   String currentRoomPicture = "none";
 
-  void _getTapPosition(TapDownDetails details) {
-    final tapPosition = details.localPosition;
-    var x = tapPosition.dx;
-    var y = tapPosition.dy;
+  void getPos(TapDownDetails details) {
+    final pos = details.localPosition;
+    var x = pos.dx;
+    var y = pos.dy;
     if (14 < x && x < 195) {
       if(75.5 < y && y < 125) {
         if (x < 30) {
@@ -70,71 +109,53 @@ class LoadPageState extends State<LoadPage> {
       _room = "not found";
       currentRoomPicture = "none";
     }
-    setState(() {
-      _tapPosition = tapPosition;
-    });
+    _tapPosition = pos;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: darkTheme ? null : Colors.grey,
-        appBar: AppBar (
-          title: Text("阿里山蔣中正行館\t(${_tapPosition?.dx.toStringAsFixed(2) ?? "x"},${_tapPosition?.dy.toStringAsFixed(2) ?? "y"})"),
-          backgroundColor: Colors.white60,
-          centerTitle: false,
-        ),
-        body: Container (
-            color: Colors.black26,
-            child: Column(
-                children: <Widget> [
-                  Transform.scale(
-                      scale: 2.0,
-                      child: Container(
-                        width: 1500.0,
-                        height: 500.0,
-                        child: DraggableImage(imageUrl: "assets/map.png")
-                      )
-                  ),
-                  // GestureDetector(
-                  // onTapDown:(details) => _getTapPosition(details),
-                  // child: const Image(image: AssetImage('assets/map.png'))
-                  // ),
-                  Text("current room:$_room")
-                  // Image(image: AssetImage('assets/$currentRoomPicture.jpg')),
-
-                ]
-            )
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            _tapPosition = const Offset(0,0);
-          },
-          backgroundColor: Colors.blueGrey,
-          label: const Text("查看介紹"),
-          icon: const Icon(Icons.remove_red_eye_outlined),
-        )
-    );
-  }
-}
-//==============================================================================
-class DraggableImage extends StatelessWidget {
-  final String imageUrl;
-  final double maxScale;
-
-  DraggableImage({
-    required this.imageUrl,
-    this.maxScale = 2.0,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+    final double imgWidth;
+    if (Image.asset(widget.imageUrl).width != null) {
+      imgWidth = (Image
+          .asset(widget.imageUrl)
+          .width! / 2);
+    }
+    else {
+      imgWidth = double.parse("140");
+    }
+    final double imgHeight;
+    if (Image.asset(widget.imageUrl).height != null) {
+      imgHeight = (Image
+          .asset(widget.imageUrl)
+          .height! / 2);
+    }
+    else {
+      imgHeight = double.parse("250");
+    }
     return InteractiveViewer(
       panEnabled: true,
-      boundaryMargin: EdgeInsets.all(double.infinity),
-      minScale: 1.0,
-      maxScale: maxScale,
-      child: Image.asset(imageUrl,fit: BoxFit.contain),
+      boundaryMargin: EdgeInsets.only(left: imgWidth,right: imgWidth,top: imgHeight,bottom: imgHeight),
+      minScale: 0.5,
+      maxScale: widget.maxScale,
+      child: GestureDetector(
+          onTapDown:(details) => getPos(details),
+          child:
+          Column(
+            children: <Widget>[
+              Text("Offset: (${_tapPosition.dx.toStringAsFixed(2)},${_tapPosition.dy.toStringAsFixed(2)})"),
+              Transform.scale(
+                  scale: 4.0,
+                  child: SizedBox(
+                      width: 1450.0,
+                      height: imgHeight / 2 ,
+                      child: Image.asset(widget.imageUrl, fit: BoxFit.contain)
+                  )
+              ),
+              Text("current room:$_room"),
+              // Image(image: AssetImage('assets/$currentRoomPicture.jpg')),
+            ],
+          ),
+        )
     );
   }
 }
