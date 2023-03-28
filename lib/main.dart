@@ -41,9 +41,9 @@ class LoadPageState extends State<LoadPage> {
             child:InteractiveImage(items: [
               InteractiveImageItem(
                 imagePath: 'assets/east/01.jpg',
-                title: 'Item 1',
-                subtitle: 'This is the first item.',
-                position: Offset(100, 100),
+                title: '洋館 01 主玄關',
+                subtitle: '由於日本傳統文化中階級分明，因此該玄關於日治時期功能為提供重要貴賓直接出入，服務人員並不會由此出入。',
+                position: Offset(100, 345),
               ),
             ],)
         ),
