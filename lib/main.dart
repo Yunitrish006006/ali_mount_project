@@ -38,7 +38,14 @@ class LoadPageState extends State<LoadPage> {
         ),
         body: Container (
             color: Colors.black26,
-            child: ImageMap()
+            child:InteractiveImage(items: [
+              InteractiveImageItem(
+                imagePath: 'assets/east/01.jpg',
+                title: 'Item 1',
+                subtitle: 'This is the first item.',
+                position: Offset(100, 100),
+              ),
+            ],)
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -52,128 +59,110 @@ class LoadPageState extends State<LoadPage> {
 }
 //==============================================================================
 
-class ImageMap extends StatefulWidget {
+class InteractiveImage extends StatefulWidget {
+  final List<InteractiveImageItem> items;
+
+  InteractiveImage({required this.items});
+
   @override
-  _ImageMapState createState() => _ImageMapState();
+  _InteractiveImageState createState() => _InteractiveImageState();
 }
 
-class _ImageMapState extends State<ImageMap> {
-  final Map<String, String> _imageMap = {
-    'topLeft': 'assets/east/01.jpg',
-    'topRight': 'assets/east/02.jpg',
-    'bottomLeft': 'assets/east/03.jpg',
-    'bottomRight': 'assets/east/04.jpg',
-  };
+class _InteractiveImageState extends State<InteractiveImage> {
+  late Size imageSize;
+  late double xPosition;
+  late double yPosition;
 
-  String _selectedImage = '';
-  String _selectedPosition = '';
+  void _onPanUpdate(DragUpdateDetails details) {
+    setState(() {
+      xPosition += details.delta.dx;
+      yPosition += details.delta.dy;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    xPosition = 0;
+    yPosition = 0;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapUp: _onTapUp,
-      child: Stack(
-        children: [
-          Image.asset(
-            'assets/map.png',
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-            top: 0,
-            left: 0,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.transparent,
-            ),
-          ),
-          Positioned(
-            top: 0,
-            right: 0,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.transparent,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.transparent,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 100,
-              height: 100,
-              color: Colors.transparent,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Text(
-              '$_selectedPosition',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 100,
-              height: 100,
-              child: _selectedImage.isEmpty
-                  ? Container()
-                  : Image.asset(
-                _selectedImage,
-                fit: BoxFit.cover,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(
-                  color: Colors.black,
-                  width: 1,
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        imageSize = Size(constraints.maxWidth, constraints.maxHeight);
+
+        return GestureDetector(
+          onPanUpdate: _onPanUpdate,
+          child: Stack(
+            children: [
+              Positioned(
+                left: xPosition,
+                top: yPosition,
+                child: SizedBox(
+                  width: imageSize.width,
+                  height: imageSize.height,
+                  child: Image.asset(
+                    'assets/map.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
-            ),
+              ...widget.items.map(
+                    (item) {
+                  return Positioned(
+                    left: item.position.dx + xPosition,
+                    top: item.position.dy + yPosition,
+                    child: GestureDetector(
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              content: ListTile(
+                                leading: Image.asset(
+                                  item.imagePath,
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                                title: Text(item.title),
+                                subtitle: Text(item.subtitle),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                      child: Icon(
+                        Icons.location_pin,
+                        color: Colors.red,
+                        size: 50,
+                      ),
+                    ),
+                  );
+                },
+              ).toList(),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
+}
 
-  void _onTapUp(TapUpDetails details) {
-    double x = details.localPosition.dx;
-    double y = details.localPosition.dy;
+class InteractiveImageItem {
+  final String imagePath;
+  final String title;
+  final String subtitle;
+  final Offset position;
 
-    if (x <= 100 && y <= 100) {
-      setState(() {
-        _selectedPosition = 'Top Left';
-        _selectedImage = _imageMap['topLeft']!;
-      });
-    } else if (x > 100 && y <= 100) {
-      setState(() {
-        _selectedPosition = 'Top Right';
-        _selectedImage = _imageMap['topRight']!;
-      });
-    } else if (x <= 100 && y > 100) {
-      setState(() {
-        _selectedPosition = 'Bottom Left';
-        _selectedImage = _imageMap['bottomLeft']!;
-      });
-    } else if (x > 100 && y > 100) {
-      setState(() {
-        _selectedPosition = 'Bottom Right';
-        _selectedImage = _imageMap['bottomRight']!;
-      });
-    }
-  }
+  InteractiveImageItem({
+    required this.imagePath,
+    required this.title,
+    required this.subtitle,
+    required this.position,
+  });
 }
 
 //==============================================================================
