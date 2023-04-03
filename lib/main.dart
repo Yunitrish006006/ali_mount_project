@@ -1,6 +1,11 @@
 import 'package:ali_mount_project/ImageMap.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight,
+  ]).then((value) => runApp(const MyApp()));
   runApp(const MyApp());
 }
 
@@ -31,19 +36,34 @@ class LoadPageState extends State<LoadPage> {
   Widget build(BuildContext context) {
     const List<List<Offset>> points = [
       [
-        Offset(178, 152),
-        Offset(148, 179),
-        Offset(125, 173),
-        Offset(129, 191),
-        Offset(87, 191),
-        Offset(130, 226),
-        Offset(121, 270),
-        Offset(182, 285),
-        Offset(185, 272),
-        Offset(219, 276),
-        Offset(239, 260),
-        Offset(218, 225),
-        Offset(245, 186),
+        Offset(800, 980),
+        Offset(800, 1260),
+        Offset(1070, 1260),
+        Offset(1070, 980)
+      ],
+      [
+        Offset(1080, 980),
+        Offset(1080, 1600),
+        Offset(1560, 1600),
+        Offset(1560, 980)
+      ],
+      [
+        Offset(1080, 360),
+        Offset(1080, 780),
+        Offset(1560, 780),
+        Offset(1560, 360)
+      ],
+      [
+        Offset(600, 360),
+        Offset(600, 780),
+        Offset(1080, 780),
+        Offset(1080, 360)
+      ],
+      [
+        Offset(250, 360),
+        Offset(250, 780),
+        Offset(600, 780),
+        Offset(600, 360)
       ]
     ];
     final List<Path> polygonRegions = points.map((e) {
@@ -51,7 +71,7 @@ class LoadPageState extends State<LoadPage> {
       p.addPolygon(e, true);
       return p;
     }).toList();
-    final List<Color> colors = List.generate(points.length, (index) => const Color.fromRGBO(50, 50, 200, 0.5));
+    final List<Color> colors = List.generate(points.length, (index) => Color.fromRGBO(0*index, 0*index, (60*index)%255, 0.5));
 
     return Scaffold(
         backgroundColor: darkTheme ? null : Colors.white,
@@ -61,11 +81,29 @@ class LoadPageState extends State<LoadPage> {
               imagePath: 'assets/map.png',
               imageSize: const Size(3309, 1861),
               onTap: (i) {
-                colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5)
-                    ? const Color.fromRGBO(50, 200, 50, 0.5)
-                    : const Color.fromRGBO(50, 50, 200, 0.5);
-                print(i);
-              setState(() {}); },
+                colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5) ? const Color.fromRGBO(50, 200, 50, 0.5) : const Color.fromRGBO(50, 50, 200, 0.5);
+                print(i+1);
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return AlertDialog(
+                      content:
+                      ListTile(
+                        leading:
+                        Image.asset(
+                          "assets/east/${i+1}.jpg",
+                          // width: 400,
+                          // height: 700,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text("test"),
+                        subtitle: Text("test2\n\n\n\n\ntest3"),
+                      ),
+                    );
+                  },
+                );
+                setState(() {});
+              },
               regions: polygonRegions,
               regionColors: colors,
             )
@@ -80,112 +118,3 @@ class LoadPageState extends State<LoadPage> {
     );
   }
 }
-//==============================================================================
-
-class InteractiveImage extends StatefulWidget {
-  final List<InteractiveImageItem> items;
-
-  InteractiveImage({required this.items});
-
-  @override
-  _InteractiveImageState createState() => _InteractiveImageState();
-}
-
-class _InteractiveImageState extends State<InteractiveImage> {
-  late Size imageSize;
-  late double xPosition;
-  late double yPosition;
-
-  void _onPanUpdate(DragUpdateDetails details) {
-    setState(() {
-      xPosition += details.delta.dx;
-      yPosition += details.delta.dy;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    xPosition = 0;
-    yPosition = 0;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (BuildContext context, BoxConstraints constraints) {
-        imageSize = Size(constraints.maxWidth, constraints.maxHeight);
-
-        return GestureDetector(
-          onPanUpdate: _onPanUpdate,
-          child: Stack(
-            children: [
-              Positioned(
-                left: xPosition,
-                top: yPosition,
-                child: SizedBox(
-                  width: imageSize.width,
-                  height: imageSize.height,
-                  child: Image.asset(
-                    'assets/map.png',
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-              ...widget.items.map(
-                    (item) {
-                  return Positioned(
-                    left: item.position.dx + xPosition,
-                    top: item.position.dy + yPosition,
-                    child: GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) {
-                            return AlertDialog(
-                              content: ListTile(
-                                leading: Image.asset(
-                                  item.imagePath,
-                                  width: 100,
-                                  height: 100,
-                                  fit: BoxFit.cover,
-                                ),
-                                title: Text(item.title),
-                                subtitle: Text(item.subtitle),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                      child: Icon(
-                        Icons.location_pin,
-                        color: Colors.red,
-                        size: 50,
-                      ),
-                    ),
-                  );
-                },
-              ).toList(),
-            ],
-          ),
-        );
-      },
-    );
-  }
-}
-
-class InteractiveImageItem {
-  final String imagePath;
-  final String title;
-  final String subtitle;
-  final Offset position;
-
-  InteractiveImageItem({
-    required this.imagePath,
-    required this.title,
-    required this.subtitle,
-    required this.position,
-  });
-}
-
-//==============================================================================

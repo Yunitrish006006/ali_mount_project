@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:ali_mount_project/main.dart';
+import 'package:ali_mount_project/main.dart.old';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

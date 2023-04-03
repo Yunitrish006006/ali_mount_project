@@ -29,14 +29,3 @@ subprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
-
-android {
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['genotechies']
-            keyPassword keystoreProperties['haych123']
-            storeFile file(keystoreProperties['C:/Users/thoma/ali_mount.jks'])
-            storePassword keystoreProperties['haych123']
-        }
-    }
-}
