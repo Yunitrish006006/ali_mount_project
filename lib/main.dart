@@ -61,9 +61,9 @@ class LoadPageState extends State<LoadPage> {
               imagePath: 'assets/map.png',
               imageSize: const Size(3309, 1861),
               onTap: (i) {
-                colors[i] = colors[i] == Color.fromRGBO(50, 50, 200, 0.5)
-                    ? Color.fromRGBO(50, 200, 50, 0.5)
-                    : Color.fromRGBO(50, 50, 200, 0.5);
+                colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5)
+                    ? const Color.fromRGBO(50, 200, 50, 0.5)
+                    : const Color.fromRGBO(50, 50, 200, 0.5);
                 print(i);
               setState(() {}); },
               regions: polygonRegions,
