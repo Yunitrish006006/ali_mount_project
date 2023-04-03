@@ -6,7 +6,7 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.2.0'
+        classpath 'com.android.tools.build:gradle:7.4.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -28,4 +28,15 @@ subprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+android {
+    signingConfigs {
+        release {
+            keyAlias keystoreProperties['genotechies']
+            keyPassword keystoreProperties['haych123']
+            storeFile file(keystoreProperties['C:/Users/thoma/ali_mount.jks'])
+            storePassword keystoreProperties['haych123']
+        }
+    }
 }
