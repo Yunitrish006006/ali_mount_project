@@ -1,5 +1,5 @@
+import 'package:ali_mount_project/ImageMap.dart';
 import 'package:flutter/material.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -29,23 +29,46 @@ class LoadPageState extends State<LoadPage> {
 
   @override
   Widget build(BuildContext context) {
+    const List<List<Offset>> points = [
+      [
+        Offset(178, 152),
+        Offset(148, 179),
+        Offset(125, 173),
+        Offset(129, 191),
+        Offset(87, 191),
+        Offset(130, 226),
+        Offset(121, 270),
+        Offset(182, 285),
+        Offset(185, 272),
+        Offset(219, 276),
+        Offset(239, 260),
+        Offset(218, 225),
+        Offset(245, 186),
+      ]
+    ];
+    final List<Path> polygonRegions = points.map((e) {
+      Path p = Path();
+      p.addPolygon(e, true);
+      return p;
+    }).toList();
+    final List<Color> colors = List.generate(points.length, (index) => const Color.fromRGBO(50, 50, 200, 0.5));
+
     return Scaffold(
         backgroundColor: darkTheme ? null : Colors.white,
-        appBar: AppBar (
-          title: const Text("阿里山蔣中正行館"),
-          backgroundColor: Colors.white60,
-          centerTitle: false,
-        ),
         body: Container (
             color: Colors.black26,
-            child:InteractiveImage(items: [
-              InteractiveImageItem(
-                imagePath: 'assets/east/01.jpg',
-                title: '洋館 01 主玄關',
-                subtitle: '由於日本傳統文化中階級分明，因此該玄關於日治時期功能為提供重要貴賓直接出入，服務人員並不會由此出入。',
-                position: Offset(100, 345),
-              ),
-            ],)
+            child:ImageMap(
+              imagePath: 'assets/map.png',
+              imageSize: const Size(3309, 1861),
+              onTap: (i) {
+                colors[i] = colors[i] == Color.fromRGBO(50, 50, 200, 0.5)
+                    ? Color.fromRGBO(50, 200, 50, 0.5)
+                    : Color.fromRGBO(50, 50, 200, 0.5);
+                print(i);
+              setState(() {}); },
+              regions: polygonRegions,
+              regionColors: colors,
+            )
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
