@@ -82,23 +82,43 @@ class LoadPageState extends State<LoadPage> {
               imageSize: const Size(3309, 1861),
               onTap: (i) {
                 colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5) ? const Color.fromRGBO(50, 200, 50, 0.5) : const Color.fromRGBO(50, 50, 200, 0.5);
-                print(i+1);
-                showDialog(
+                showGeneralDialog(
                   context: context,
-                  builder: (_) {
-                    return AlertDialog(
-                      content:
-                      ListTile(
-                        leading:
-                        Image.asset(
-                          "assets/east/${i+1}.jpg",
-                          // width: 400,
-                          // height: 700,
-                          fit: BoxFit.cover,
+                  barrierColor: Colors.black12.withOpacity(0.6), // Background color
+                  barrierDismissible: false,
+                  barrierLabel: 'Dialog',
+                  transitionDuration: const Duration(milliseconds: 400),
+                  pageBuilder: (_, __, ___) {
+                    return Row(
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: SizedBox.expand(child:
+                            Image.asset(
+                                      "assets/east/${i+1}.jpg",
+                                      fit: BoxFit.fitWidth,
+                                    ),
+                          ),
                         ),
-                        title: Text("test"),
-                        subtitle: Text("test2\n\n\n\n\ntest3"),
-                      ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            children: [
+                              Text("test line 1"),
+                              Text("test line 2"),
+                            ],
+                          )
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: SizedBox.expand(
+                            child: ElevatedButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: Text('Dismiss'),
+                            ),
+                          ),
+                        ),
+                      ],
                     );
                   },
                 );
