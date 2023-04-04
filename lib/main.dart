@@ -264,7 +264,6 @@ class LoadPageState extends State<LoadPage> {
       return p;
     }).toList();
     final List<Color> colors = List.generate(points.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
-
     return Scaffold(
         backgroundColor: darkTheme ? null : Colors.white,
         body: Container (
@@ -282,45 +281,48 @@ class LoadPageState extends State<LoadPage> {
                     barrierLabel: 'Dialog',
                     transitionDuration: const Duration(milliseconds: 400),
                     pageBuilder: (_, __, ___) {
-                      return Row(
-                        children: <Widget>[
-                          Expanded(
-                            flex: 18,
-                            child: SizedBox.expand(child:
-                            Image.asset(
-                              i<14 ? "assets/west/${i+1}.jpg" : "assets/east/${i-14}.jpg",
-                              fit: BoxFit.fitWidth,
+                      return GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Row(
+                          children: <Widget>[
+                            Expanded(
+                              flex: 24,
+                              child: SizedBox.expand(child:
+                              Image.asset(
+                                i<15 ? "assets/west/${i+1}.jpg" : "assets/east/${i-14}.jpg",
+                                fit: BoxFit.fitWidth,
+                              ),
+                              ),
                             ),
+                            Expanded(
+                              flex: 2,
+                              child: Column(),
                             ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Column(),
-                          ),
-                          Expanded(
-                              flex: 9,
-                              child: Column(
-                                children: [
-                                  Align(
-                                      alignment: Alignment.centerRight,
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom( backgroundColor: Colors.blueGrey,),
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Icon(Icons.close),
-                                      )
+                            Expanded(
+                              flex: 12,
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
+                                    vertical: 12.0,
                                   ),
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                        content[i],
-                                        style:
-                                        const TextStyle(fontSize: 17, color: Colors.white, decoration: TextDecoration.none)
+                                  child: Text(
+                                    content[i],
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none,
                                     ),
-                                  )
-                                ],
-                              )
-                          ),
-                        ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Column(),
+                            )
+                          ],
+                        ),
                       );
                     },
                   );
