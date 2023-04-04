@@ -263,7 +263,7 @@ class LoadPageState extends State<LoadPage> {
       p.addPolygon(e, true);
       return p;
     }).toList();
-    final List<Color> colors = List.generate(points.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.5));
+    final List<Color> colors = List.generate(points.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
 
     return Scaffold(
         backgroundColor: darkTheme ? null : Colors.white,
