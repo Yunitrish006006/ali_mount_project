@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 import 'package:ali_mount_project/ImageMap.dart';
 import 'package:flutter/services.dart';
@@ -6,8 +7,10 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight,
-  ]).then((value) => runApp(const MyApp()));
-  runApp(const MyApp());
+  ]).then((value) => runApp(const MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: SplashScreen(),
+  )));
 }
 
 class MyApp extends StatelessWidget {
@@ -333,6 +336,32 @@ class LoadPageState extends State<LoadPage> {
               ),
             )
         ),
+    );
+  }
+}
+
+class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
+  @override
+  SplashScreenState createState() => SplashScreenState();
+}
+
+class SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    Timer(const Duration(seconds: 2), () {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (BuildContext context) => LoadPage()));
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Image.asset('assets/logo.png'),
+      ),
     );
   }
 }
