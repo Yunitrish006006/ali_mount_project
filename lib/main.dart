@@ -277,7 +277,8 @@ class MainPageState extends State<MainPage> {
                           pageBuilder: (_, __, ___) {
                             return GestureDetector(
                               onTap: () => {
-                                Navigator.pop(context)
+                                Navigator.pop(context),
+                                AudioButton.audioPlayer.stop()
                               },
                               child: Row(
                                 children: <Widget>[

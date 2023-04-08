@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 class AudioButton extends StatelessWidget {
   final String audioPath;
-  final AudioPlayer audioPlayer = AudioPlayer();
-  AudioButton({super.key, required this.audioPath});
+  static AudioPlayer audioPlayer = AudioPlayer();
+  const AudioButton({super.key, required this.audioPath});
 
   @override
   Widget build(BuildContext context) {
