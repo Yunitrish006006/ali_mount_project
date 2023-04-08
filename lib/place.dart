@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-class place {
+class Place {
   String iconPath = "";
   List<Offset> points = [];
   String introduction = "";

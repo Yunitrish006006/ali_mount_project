@@ -9,7 +9,7 @@ class ImageMap extends StatefulWidget {
   final void Function(int) onTap;
   final Size imageSize;
   final bool isDebug;
-  ImageMap(
+  const ImageMap(
       {Key? key,
         required this.imagePath,
         required this.imageSize,
@@ -43,11 +43,11 @@ class ImageMapState extends State<ImageMap> {
           }
         },
         child: CustomPaint(
-            child: Image.asset(widget.imagePath),
             foregroundPainter: ImageMapPainter(
                 shapes: widget.regions,
                 colors: widget.regionColors,
                 rawSize: widget.imageSize,
-                debug: widget.isDebug)));
+                debug: widget.isDebug),
+            child: Image.asset(widget.imagePath)));
   }
 }

@@ -7,45 +7,33 @@ import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight,
-  ]).then((value) => runApp(const MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: SplashScreen(),
-  )));
+  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]).then((value) => runApp(
+      const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: SplashScreen()
+      )
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(brightness: Brightness.dark),
-      home: const LoadPage(),
-    );
-  }
+  MainPageState createState() => MainPageState();
 }
 
-class LoadPage extends StatefulWidget {
-  const LoadPage({super.key});
-  @override
-  LoadPageState createState() => LoadPageState();
-}
-
-class LoadPageState extends State<LoadPage> {
-  List<place> places = [];
+class MainPageState extends State<MainPage> {
+  List<Place> places = [];
   bool darkTheme = true;
 
   Future<void> _loadPlaces() async {
     String jsonString = await rootBundle.loadString('assets/index.json');
     Map<String, dynamic> data = json.decode(jsonString);
-    List<place> values = [];
+    List<Place> values = [];
     data.forEach((key, value) {
-      place temp = new place();
+      Place temp = Place();
       temp.introduction = value['introduction'];
       temp.iconPath = value['picture'];
-      // temp.points = value['area'];
+      // temp.points = List<Offset>.from(jsonMap['points'].map((p) => Offset(p['x'], p['y'])))
       values.add(temp);
     });
 
@@ -269,7 +257,7 @@ class LoadPageState extends State<LoadPage> {
             color: Colors.white,
             child:Center(
               child: ImageMap(
-                imagePath: 'assets/map.png',
+                imagePath: 'assets/texture/map.png',
                 imageSize: const Size(3309, 1861),
                 onTap: (i) {
                   colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5) ? const Color.fromRGBO(50, 200, 50, 0.5) : const Color.fromRGBO(50, 50, 200, 0.5);
@@ -326,14 +314,14 @@ class SplashScreenState extends State<SplashScreen> {
     super.initState();
     Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => LoadPage()));
+          MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
     });
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Image.asset('assets/logo.png'),
+        child: Image.asset('assets/texture/logo.png'),
       ),
     );
   }
