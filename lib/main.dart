@@ -283,21 +283,23 @@ class MainPageState extends State<MainPage> {
                               child: Column(
                                 children: <Widget>[
                                   Expanded(
-                                    flex: 1,
-                                    child:Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: AudioButton(audioPath: places[i].voicePath),
-                                    )
-                                  ),
-                                  Expanded(
-                                      flex: 12,
+                                      flex: 22,
                                       child: SingleChildScrollView(
                                       child: Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12.0),
                                           child: Text(
                                               places[i].introduction,
                                               style: const TextStyle(fontSize: 20,color: Colors.white,decoration: TextDecoration.none))
-                                      )))
+                                      ))),
+                                  Expanded(flex:1,child:Column()),
+                                  Expanded(
+                                      flex: 2,
+                                      child:Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: AudioButton(audioPath: places[i].voicePath),
+                                      )
+                                  ),
+                                  Expanded(flex:1,child:Column())
                                 ],
                               )
                             ),

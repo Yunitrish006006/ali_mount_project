@@ -9,11 +9,14 @@ class AudioButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
+      style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20),backgroundColor: const Color.fromRGBO(255, 255, 255, 0.2)),
       onPressed: () {
         audioPlayer.play(AssetSource(audioPath));
       },
-      child: const Icon(Icons.play_arrow)
+      child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        children: const [Icon(Icons.sensors),Text("導覽語音")]
+      )
     );
   }
 }
