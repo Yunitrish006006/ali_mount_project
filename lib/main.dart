@@ -35,7 +35,10 @@ class MainPageState extends State<MainPage> {
       temp.introduction = value['introduction'];
       temp.iconPath = value['picture'];
       temp.voicePath = value['voice'];
-      // temp.points = List<Offset>.from(jsonMap['points'].map((p) => Offset(p['x'], p['y'])))
+      Map<String, dynamic> area = value["area"];
+      area.forEach((key, value) {
+        temp.points.add(Offset(value['x'] as double, value['y'] as double));
+      });
       values.add(temp);
     });
 
@@ -51,214 +54,19 @@ class MainPageState extends State<MainPage> {
   }
   @override
   Widget build(BuildContext context) {
-    const List<List<Offset>> points = [
-      [
-        Offset(800, 980),
-        Offset(800, 1260),
-        Offset(1070, 1260),
-        Offset(1070, 980)
-      ],
-      [
-        Offset(1080, 980),
-        Offset(1080, 1600),
-        Offset(1560, 1600),
-        Offset(1560, 980)
-      ],
-      [
-        Offset(1080, 360),
-        Offset(1080, 780),
-        Offset(1560, 780),
-        Offset(1560, 360)
-      ],
-      [
-        Offset(600, 360),
-        Offset(600, 780),
-        Offset(1080, 780),
-        Offset(1080, 360)
-      ],
-      [
-        Offset(250, 360),
-        Offset(250, 780),
-        Offset(600, 780),
-        Offset(600, 360)
-      ],
-      [
-        Offset(450, 980),
-        Offset(450, 1340),
-        Offset(800, 1340),
-        Offset(800, 980)
-      ],
-      [
-        Offset(260, 980),
-        Offset(260, 1340),
-        Offset(450, 1340),
-        Offset(450, 980)
-      ],
-      [
-        Offset(110, 910),
-        Offset(110, 1040),
-        Offset(260, 1040),
-        Offset(260, 910)
-      ],
-      [
-        Offset(110, 1040),
-        Offset(110, 1130),
-        Offset(260, 1130),
-        Offset(260, 1040)
-      ],
-      [
-        Offset(110, 1130),
-        Offset(110, 1330),
-        Offset(260, 1330),
-        Offset(260, 1130)
-      ],
-      [
-        Offset(450,780),
-        Offset(450,980),
-        Offset(1560,980),
-        Offset(1560,780)
-      ],
-      [
-        Offset(110,780),
-        Offset(110,910),
-        Offset(260,910),
-        Offset(260,980),
-        Offset(450,980),
-        Offset(450,780)
-      ],
-      [
-        Offset(1560, 230),
-        Offset(1560, 640),
-        Offset(1690, 640),
-        Offset(1690, 230)
-      ],
-      [
-        Offset(110, 230),
-        Offset(110, 780),
-        Offset(250, 780),
-        Offset(250, 230)
-      ],
-      [
-        Offset(250, 160),
-        Offset(250, 360),
-        Offset(1560, 360),
-        Offset(1560, 160)
-      ],
-    //  ===============
-      [
-        Offset(2110, 770),
-        Offset(2110, 1060),
-        Offset(1770, 1060),
-        Offset(1770, 770)
-      ],
-      [
-        Offset(2390, 770),
-        Offset(2390, 1060),
-        Offset(2110, 1060),
-        Offset(2110, 770)
-      ],
-      [
-        Offset(2250, 1190),
-        Offset(2250, 1470),
-        Offset(1980, 1470),
-        Offset(1980, 1190)
-      ],
-      [
-        Offset(2450, 1190),
-        Offset(2450, 1470),
-        Offset(2250, 1470),
-        Offset(2250, 1190)
-      ],
-      [
-        Offset(2570, 1260),
-        Offset(2570, 1475),
-        Offset(2520, 1475),
-        Offset(2520, 1750),
-        Offset(2940, 1750),
-        Offset(2940, 1475),
-        Offset(2940, 1260)
-      ],
-      [
-        Offset(1770, 1190),
-        Offset(1770, 1470),
-        Offset(1560, 1470),
-        Offset(1560, 1190)
-      ],
-      [
-        Offset(2620, 830),
-        Offset(2620, 1060),
-        Offset(2460, 1060),
-        Offset(2460, 830)
-      ],
-      [
-        Offset(2800, 830),
-        Offset(2800, 1060),
-        Offset(2620, 1060),
-        Offset(2620, 830)
-      ],
-      [
-        Offset(1910, 1190),
-        Offset(1910, 1470),
-        Offset(1770, 1470),
-        Offset(1770, 1190)
-      ],
-      [
-        Offset(1560, 640),
-        Offset(1560, 1190),
-        Offset(2660, 1190),
-        Offset(2660, 1050),
-        Offset(1700, 1050),
-        Offset(1700, 640)
-      ],
-      [
-        Offset(2810, 1050),
-        Offset(2810, 1190),
-        Offset(2660, 1190),
-        Offset(2660, 1050)
-      ],
-      [
-        Offset(1770, 640),
-        Offset(1770, 780),
-        Offset(2450, 780),
-        Offset(2450, 640),
-      ],
-      [
-        Offset(1910, 1470),
-        Offset(1910, 1550),
-        Offset(2520, 1550),
-        Offset(2520, 1470),
-      ],
-      // [
-      //   Offset(2900, 980),
-      //   Offset(2900, 1260),
-      //   Offset(3070, 1260),
-      //   Offset(3070, 980),
-      // ],
-      // [
-      //   Offset(2900, 640),
-      //   Offset(2900, 880),
-      //   Offset(3070, 880),
-      //   Offset(3070, 640),
-      // ],
-      // [
-      //   Offset(3070, 640),
-      //   Offset(3070, 1260),
-      //   Offset(3220, 1260),
-      //   Offset(3220, 640),
-      // ],
-    ];
-    final List<Path> polygonRegions = points.map((e) {
+    final List<Path> polygonRegions = places.map((e) {
       Path p = Path();
-      p.addPolygon(e, true);
+      p.addPolygon(e.points, true);
       return p;
     }).toList();
-    final List<Color> colors = List.generate(points.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
+    final List<Color> colors = List.generate(places.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
     return Scaffold(
-        backgroundColor: darkTheme ? null : Colors.white,
+        backgroundColor: null,
+        // appBar: AppBar(title: Text(places[0].points[0].dx.toString())),
         body: Container (
             color: Colors.white,
             child: InteractiveViewer(
-                panEnabled: true, // Set it to false to prevent panning.
+                panEnabled: true,
                 boundaryMargin: const EdgeInsets.all(0),
                 minScale: 0.5,
                 maxScale: 4,
@@ -267,7 +75,7 @@ class MainPageState extends State<MainPage> {
                       imagePath: 'assets/texture/map.png',
                       imageSize: const Size(3309, 1861),
                       onTap: (i) {
-                        colors[i] = colors[i] == const Color.fromRGBO(50, 50, 200, 0.5) ? const Color.fromRGBO(50, 200, 50, 0.5) : const Color.fromRGBO(50, 50, 200, 0.5);
+                        colors[i] = const Color.fromRGBO(50, 50, 200, 0.5);
                         showGeneralDialog(
                           context: context,
                           barrierColor: Colors.black12.withOpacity(0.9), // Background color
@@ -276,10 +84,7 @@ class MainPageState extends State<MainPage> {
                           transitionDuration: const Duration(milliseconds: 400),
                           pageBuilder: (_, __, ___) {
                             return GestureDetector(
-                              onTap: () => {
-                                Navigator.pop(context),
-                                AudioButton.audioPlayer.stop()
-                              },
+                              onTap: () => {Navigator.pop(context), AudioButton.audioPlayer.stop()},
                               child: Row(
                                 children: <Widget>[
                                   Expanded(flex:24,child: SizedBox.expand(child:Image.asset(places[i].iconPath, fit: BoxFit.fitWidth))),
