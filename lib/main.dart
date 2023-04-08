@@ -277,7 +277,7 @@ class MainPageState extends State<MainPage> {
                         child: Row(
                           children: <Widget>[
                             Expanded(flex:24,child: SizedBox.expand(child:Image.asset(places[i].iconPath, fit: BoxFit.fitWidth))),
-                            Expanded(flex:2,child: Column()),
+                            Expanded(flex:1,child: Column()),
                             Expanded(
                               flex: 12,
                               child: Column(
