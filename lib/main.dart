@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
+import 'package:ali_mount_project/audio_button.dart';
 import 'package:ali_mount_project/image_map.dart';
 import 'package:ali_mount_project/place.dart';
 import 'package:flutter/services.dart';
@@ -33,6 +34,7 @@ class MainPageState extends State<MainPage> {
       Place temp = Place();
       temp.introduction = value['introduction'];
       temp.iconPath = value['picture'];
+      temp.voicePath = value['voice'];
       // temp.points = List<Offset>.from(jsonMap['points'].map((p) => Offset(p['x'], p['y'])))
       values.add(temp);
     });
@@ -269,20 +271,35 @@ class MainPageState extends State<MainPage> {
                     transitionDuration: const Duration(milliseconds: 400),
                     pageBuilder: (_, __, ___) {
                       return GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () => {
+                          Navigator.pop(context)
+                          },
                         child: Row(
                           children: <Widget>[
                             Expanded(flex:24,child: SizedBox.expand(child:Image.asset(places[i].iconPath, fit: BoxFit.fitWidth))),
                             Expanded(flex:2,child: Column()),
                             Expanded(
                               flex: 12,
-                              child: SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12.0),
-                                  child: Text(
-                                    places[i].introduction,
-                                    style: const TextStyle(fontSize: 20,color: Colors.white,decoration: TextDecoration.none))
-                                ))
+                              child: Column(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child:Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: AudioButton(audioPath: places[i].voicePath),
+                                    )
+                                  ),
+                                  Expanded(
+                                      flex: 12,
+                                      child: SingleChildScrollView(
+                                      child: Padding(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12.0),
+                                          child: Text(
+                                              places[i].introduction,
+                                              style: const TextStyle(fontSize: 20,color: Colors.white,decoration: TextDecoration.none))
+                                      )))
+                                ],
+                              )
                             ),
                             Expanded(flex:1,child: Column())
                           ],
