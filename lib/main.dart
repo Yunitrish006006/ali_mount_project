@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'package:ali_mount_project/ImageMap.dart';
+import 'package:ali_mount_project/image_map.dart';
 import 'package:ali_mount_project/place.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';

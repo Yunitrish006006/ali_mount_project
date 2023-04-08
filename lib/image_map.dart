@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'ImageMapPainter.dart';
+import 'image_map_painter.dart';
 
 class ImageMap extends StatefulWidget {
   final String imagePath;
