@@ -25,6 +25,7 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   List<Place> places = [];
   bool darkTheme = true;
+  Size mySize = Size(100,100);
 
   Future<void> _loadPlaces() async {
     String jsonString = await rootBundle.loadString('assets/index.json');
@@ -39,6 +40,8 @@ class MainPageState extends State<MainPage> {
       area.forEach((key, value) {
         temp.points.add(Offset(value['x'] as double, value['y'] as double));
       });
+      mySize = Size((value["area"]["p3"]['x'] as double) - (value["area"]["p1"]['x'] as double), (value["area"]["p3"]['y'] as double) - (value["area"]["p1"]['y'] as double));
+      temp.myRect = Offset(value["area"]["p1"]['x'] as double, value["area"]["p1"]['y'] as double) & mySize;
       values.add(temp);
     });
 
@@ -56,13 +59,21 @@ class MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     final List<Path> polygonRegions = places.map((e) {
       Path p = Path();
-      p.addPolygon(e.points, true);
+      // p.addPolygon(e.points, true);
+      p.addRect(e.myRect); p.close();
       return p;
     }).toList();
     final List<Color> colors = List.generate(places.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
     return Scaffold(
-        backgroundColor: null,
-        // appBar: AppBar(title: Text(places[0].points[0].dx.toString())),
+        extendBodyBehindAppBar: true,
+        backgroundColor: Colors.white,
+        appBar: AppBar(
+          toolbarHeight: 30,
+          title: Text('阿里山貴賓館導覽系統'),
+          centerTitle: true,
+          backgroundColor: Color(0x44000000),
+          elevation: 0.0,
+        ),
         body: Container (
             color: Colors.white,
             child: InteractiveViewer(
@@ -75,7 +86,8 @@ class MainPageState extends State<MainPage> {
                       imagePath: 'assets/texture/map.png',
                       imageSize: const Size(3309, 1861),
                       onTap: (i) {
-                        colors[i] = const Color.fromRGBO(50, 50, 200, 0.5);
+                        // colors[i] = const Color.fromRGBO(50, 50, 200, 0.5);
+                        // print(places[i].myRect);
                         showGeneralDialog(
                           context: context,
                           barrierColor: Colors.black12.withOpacity(0.9), // Background color
