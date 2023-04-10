@@ -1,13 +1,15 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'package:ali_mount_project/audio_button.dart';
 import 'package:ali_mount_project/image_map.dart';
 import 'package:ali_mount_project/place.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+
+List<Place> placeData=[];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  Place.loadPlaces(placeData);
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]).then((value) => runApp(
       const MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -23,55 +25,20 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  List<Place> places = [];
   bool darkTheme = true;
-  Size mySize = Size(100,100);
-
-  Future<void> _loadPlaces() async {
-    String jsonString = await rootBundle.loadString('assets/index.json');
-    Map<String, dynamic> data = json.decode(jsonString);
-    List<Place> values = [];
-    data.forEach((key, value) {
-      Place temp = Place();
-      temp.introduction = value['introduction'];
-      temp.iconPath = value['picture'];
-      temp.voicePath = value['voice'];
-      Map<String, dynamic> area = value["area"];
-      area.forEach((key, value) {
-        temp.points.add(Offset(value['x'] as double, value['y'] as double));
-      });
-      mySize = Size((value["area"]["p3"]['x'] as double) - (value["area"]["p1"]['x'] as double), (value["area"]["p3"]['y'] as double) - (value["area"]["p1"]['y'] as double));
-      temp.myRect = Offset(value["area"]["p1"]['x'] as double, value["area"]["p1"]['y'] as double) & mySize;
-      values.add(temp);
-    });
-
-    setState(() {
-      places = values;
-    });
-  }
-
   @override
-  void initState() {
-    super.initState();
-    _loadPlaces();
-  }
+  void initState() {super.initState();}
   @override
   Widget build(BuildContext context) {
-    final List<Path> polygonRegions = places.map((e) {
-      Path p = Path();
-      // p.addPolygon(e.points, true);
-      p.addRect(e.myRect); p.close();
-      return p;
-    }).toList();
-    final List<Color> colors = List.generate(places.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
+    final List<Color> colors = List.generate(placeData.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
         appBar: AppBar(
           toolbarHeight: 30,
-          title: Text('阿里山貴賓館導覽系統'),
+          title: const Text('阿里山貴賓館導覽系統'),
           centerTitle: true,
-          backgroundColor: Color(0x44000000),
+          backgroundColor: const Color(0x44000000),
           elevation: 0.0,
         ),
         body: Container (
@@ -86,8 +53,6 @@ class MainPageState extends State<MainPage> {
                       imagePath: 'assets/texture/map.png',
                       imageSize: const Size(3309, 1861),
                       onTap: (i) {
-                        // colors[i] = const Color.fromRGBO(50, 50, 200, 0.5);
-                        // print(places[i].myRect);
                         showGeneralDialog(
                           context: context,
                           barrierColor: Colors.black12.withOpacity(0.9), // Background color
@@ -99,7 +64,7 @@ class MainPageState extends State<MainPage> {
                               onTap: () => {Navigator.pop(context), AudioButton.audioPlayer.stop()},
                               child: Row(
                                 children: <Widget>[
-                                  Expanded(flex:24,child: SizedBox.expand(child:Image.asset(places[i].iconPath, fit: BoxFit.fitWidth))),
+                                  Expanded(flex:24,child: SizedBox.expand(child:Image.asset(placeData[i].iconPath, fit: BoxFit.fitWidth))),
                                   Expanded(flex:1,child: Column()),
                                   Expanded(
                                       flex: 12,
@@ -111,7 +76,7 @@ class MainPageState extends State<MainPage> {
                                                   child: Padding(
                                                       padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12.0),
                                                       child: Text(
-                                                          places[i].introduction,
+                                                          placeData[i].introduction,
                                                           style: const TextStyle(fontSize: 20,color: Colors.white,decoration: TextDecoration.none))
                                                   ))),
                                           Expanded(flex:1,child:Column()),
@@ -119,7 +84,7 @@ class MainPageState extends State<MainPage> {
                                               flex: 2,
                                               child:Align(
                                                 alignment: Alignment.centerLeft,
-                                                child: AudioButton(audioPath: places[i].voicePath),
+                                                child: AudioButton(audioPath: placeData[i].voicePath),
                                               )
                                           ),
                                           Expanded(flex:1,child:Column())
@@ -134,7 +99,7 @@ class MainPageState extends State<MainPage> {
                         );
                         setState(() {});
                       },
-                      regions: polygonRegions,
+                      regions: placeData.map((place) => place.polygonRegion).toList(),
                       regionColors: colors,
                     )
                 )
