@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:ali_mount_project/audio_button.dart';
 import 'package:ali_mount_project/image_map.dart';
 import 'package:ali_mount_project/place.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 List<Place> placeData=[];
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  Place.loadPlaces(placeData);
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]).then((value) => runApp(
       const MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -60,41 +58,7 @@ class MainPageState extends State<MainPage> {
                           barrierLabel: 'Dialog',
                           transitionDuration: const Duration(milliseconds: 400),
                           pageBuilder: (_, __, ___) {
-                            return GestureDetector(
-                              onTap: () => {Navigator.pop(context), AudioButton.audioPlayer.stop()},
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(flex:24,child: SizedBox.expand(child:Image.asset(placeData[i].iconPath, fit: BoxFit.fitWidth))),
-                                  Expanded(flex:1,child: Column()),
-                                  Expanded(
-                                      flex: 12,
-                                      child: Column(
-                                        children: <Widget>[
-                                          Expanded(
-                                              flex: 22,
-                                              child: SingleChildScrollView(
-                                                  child: Padding(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 12.0),
-                                                      child: Text(
-                                                          placeData[i].introduction,
-                                                          style: const TextStyle(fontSize: 20,color: Colors.white,decoration: TextDecoration.none))
-                                                  ))),
-                                          Expanded(flex:1,child:Column()),
-                                          Expanded(
-                                              flex: 2,
-                                              child:Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: AudioButton(audioPath: placeData[i].voicePath),
-                                              )
-                                          ),
-                                          Expanded(flex:1,child:Column())
-                                        ],
-                                      )
-                                  ),
-                                  Expanded(flex:1,child: Column())
-                                ],
-                              ),
-                            );
+                            return placeData[i].page(context);
                           },
                         );
                         setState(() {});
@@ -119,6 +83,7 @@ class SplashScreen extends StatefulWidget {
 class SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
+    Place.loadPlaces(placeData);
     super.initState();
     Timer(const Duration(seconds: 2), () {
       Navigator.of(context).pushReplacement(
