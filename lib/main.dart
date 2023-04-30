@@ -1,9 +1,9 @@
-import 'dart:async';
-import 'dart:math';
 import 'package:ali_mount_project/image_map.dart';
 import 'package:ali_mount_project/place.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+
+import 'loading_page.dart';
 
 List<Place> placeData=[];
 void main() {
@@ -11,7 +11,7 @@ void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]).then((value) => runApp(
       const MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SplashScreen()
+        home: LoadScreen()
       )
   ));
 }
@@ -28,7 +28,6 @@ class MainPageState extends State<MainPage> {
   void initState() {super.initState();}
   @override
   Widget build(BuildContext context) {
-    final List<Color> colors = List.generate(placeData.length, (index) => Color.fromRGBO(Random().nextInt(255), Random().nextInt(255), Random().nextInt(255), 0.2));
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.white,
@@ -48,54 +47,15 @@ class MainPageState extends State<MainPage> {
                 maxScale: 4,
                 child: Center(
                     child:ImageMap(
+                      places: placeData,
                       imagePath: 'assets/texture/map.png',
-                      imageSize: const Size(3309, 1861),
-                      onTap: (i) {
-                        showGeneralDialog(
-                          context: context,
-                          barrierColor: Colors.black12.withOpacity(0.9), // Background color
-                          barrierDismissible: false,
-                          barrierLabel: 'Dialog',
-                          transitionDuration: const Duration(milliseconds: 400),
-                          pageBuilder: (_, __, ___) {
-                            return placeData[i].page(context);
-                          },
-                        );
-                        setState(() {});
-                      },
-                      regions: placeData.map((place) => place.polygonRegion).toList(),
-                      regionColors: colors,
+                      imageSize: const Size(3309, 1861)
                     )
                 )
             )
         ),
+      // floatingActionButton:
     );
   }
 }
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
-
-  @override
-  SplashScreenState createState() => SplashScreenState();
-}
-
-class SplashScreenState extends State<SplashScreen> {
-  @override
-  void initState() {
-    Place.loadPlaces(placeData);
-    super.initState();
-    Timer(const Duration(seconds: 2), () {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (BuildContext context) => const MainPage()));
-    });
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Image.asset('assets/texture/logo.png'),
-      ),
-    );
-  }
-}
