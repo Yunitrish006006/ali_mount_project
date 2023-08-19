@@ -23,6 +23,7 @@ class MapPageState extends State<MapPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: null,
         toolbarHeight: 24,
         title: const Text('阿里山貴賓館導覽系統'),
         centerTitle: true,

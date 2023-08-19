@@ -16,7 +16,7 @@ class LoadPageState extends State<LoadPage> {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
     Timer(const Duration(seconds: 2), () {
-      Navigator.pushNamed(context, '/map_page');
+      Navigator.pushReplacementNamed(context, '/map_page');
     });
   }
 
