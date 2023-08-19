@@ -1,6 +1,5 @@
-import 'package:ali_mount_project/place.dart';
+import 'package:ali_mount_project/service/place.dart';
 import 'package:flutter/material.dart';
-import 'image_map_painter.dart';
 
 class ImageMap extends StatefulWidget {
   final String imagePath;
@@ -9,16 +8,14 @@ class ImageMap extends StatefulWidget {
   final bool isDebug;
   const ImageMap(
       {Key? key,
-        required this.places,
-        required this.imagePath,
-        required this.imageSize,
-        this.isDebug = false})
+      required this.places,
+      required this.imagePath,
+      required this.imageSize,
+      this.isDebug = false})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() {
-    return ImageMapState();
-  }
+  State<StatefulWidget> createState() => ImageMapState();
 }
 
 class ImageMapState extends State<ImageMap> {
@@ -38,14 +35,6 @@ class ImageMapState extends State<ImageMap> {
             }
           }
         },
-        child: CustomPaint(
-            foregroundPainter: ImageMapPainter(
-                shapes: widget.places.map((place) => place.polygonRegion).toList(),
-                colors: widget.places.map((place) => place.color).toList(),
-                rawSize: widget.imageSize,
-                debug: widget.isDebug),
-            child: Image.asset(widget.imagePath)
-        )
-    );
+        child: Image.asset(widget.imagePath));
   }
 }

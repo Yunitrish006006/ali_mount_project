@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'audio_button.dart';
+import '../component/audio_button.dart';
 
 class Place {
   static Size mySize = const Size(100, 100);
@@ -16,7 +16,7 @@ class Place {
   String introduction = "";
   Path polygonRegion = Path();
   Color color = Color.fromRGBO(
-      Random().nextInt(200), Random().nextInt(200), Random().nextInt(200), 0.2);
+      Random().nextInt(200), Random().nextInt(200), Random().nextInt(200), 0.4);
 
   Place() {
     name = "";
